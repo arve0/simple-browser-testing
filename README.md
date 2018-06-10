@@ -9,9 +9,11 @@ This is a minimal setup of testing in chrome headless using
 It basically
 
 1. Builds client side code (`*.tsx`) with typescript
-  a. `React`, `ReactDOM` and `tape` are defined as globals in [globals.d.ts](globals.d.ts)
-  b. Modules are resolved client-side (**no** need for a bundler like webpack)
-  c. Import dependencies with ES2015 syntax: `import Component from './Component.js'`
+
+    - `React`, `ReactDOM` and `tape` are defined as globals in [globals.d.ts](globals.d.ts)
+    - Modules are resolved client-side (**no** need for a bundler like webpack)
+    - Import dependencies with ES2015 syntax: `import Component from './Component.js'`
+
 2. Starts a webserver
 3. Loads chromium through puppeteer
 4. Pipes output from chromium to terminal console
