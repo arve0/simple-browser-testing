@@ -1,16 +1,14 @@
 # simple browser testing
-This is a minimal setup of testing in chrome headless using
+This is a dead simple setup of end-to-end testing with chrome headless using
 
-- [puppeteer](https://www.npmjs.com/package/puppeteer/)
-- [tape](https://www.npmjs.com/package/tape)
-- [tap-dot](https://www.npmjs.com/package/tap-dot) ([patched](https://github.com/arve0/tap-dot/commit/68064386cb4210911f8ad31347bd0f30ce30c8b2) to support stack trace)
+- [puppeteer](https://www.npmjs.com/package/puppeteer/) and
+- [mocha](https://www.npmjs.com/package/mocha).
 
 It basically
 
 1. Starts a webserver
 2. Loads chromium through puppeteer
-3. Pipes output from chromium to terminal console
-4. Pipes [TAP](https://testanything.org) output through tap-dot
+4. Runs tests with mocha
 
 ## usage
 ```sh
@@ -21,64 +19,29 @@ npm install
 npm test
 ```
 
-You should get one test passing and two tests failing:
+You should get one test passing and one test failing:
 ```sh
 $ npm test
 
-> simple-browser-testing@1.0.0 test /Users/arve/git/react-animate-on-change/browser-tests
-> node test.js | tap-dot
-
-
-  .xx
-
-
-  ---
-    operator: fail
-    stack: |-
-           Error: failing test
-             at Test.assert [as _assert] (http://localhost:8888/tape.js:7924:54)
-             at Test.bound [as _assert] (http://localhost:8888/tape.js:7776:32)
-             at Test.fail (http://localhost:8888/tape.js:8017:10)
-             at Test.bound [as fail] (http://localhost:8888/tape.js:7776:32)
-             at Test.t (http://localhost:8888/client-tests.js:9:7)
-             at Test.bound [as _cb] (http://localhost:8888/tape.js:7776:32)
-             at Test.run (http://localhost:8888/tape.js:7795:10)
-             at Test.bound [as run] (http://localhost:8888/tape.js:7776:32)
-             at next (http://localhost:8888/tape.js:7573:15)
-             at onNextTick (http://localhost:8888/tape.js:8431:12)
-
-  ...
-  ---
-    operator: deepEqual
-    expected: |-
-      { b: 2 }
-    actual: |-
-      { a: 1 }
-    stack: |-
-           Error: should be equivalent
-             at Test.assert [as _assert] (http://localhost:8888/tape.js:7924:54)
-             at Test.bound [as _assert] (http://localhost:8888/tape.js:7776:32)
-             at Test.tapeDeepEqual (http://localhost:8888/tape.js:8121:10)
-             at Test.bound [as deepEqual] (http://localhost:8888/tape.js:7776:32)
-             at Test.t (http://localhost:8888/client-tests.js:14:7)
-             at Test.bound [as _cb] (http://localhost:8888/tape.js:7776:32)
-             at Test.run (http://localhost:8888/tape.js:7795:10)
-             at Test.bound [as run] (http://localhost:8888/tape.js:7776:32)
-             at next (http://localhost:8888/tape.js:7573:15)
-             at onNextTick (http://localhost:8888/tape.js:8431:12)
-
-  ...
+> simple-browser-testing@1.0.0 test /Users/arve/git/simple-browser-testing
+> mocha test.js
 
 
 
-  3 tests
-  1 passed
-  2 failed
+Server: Listening on port 8888
+Server: 200 - GET: /
+  ✓ should have an input element (58ms)
+Server: 200 - GET: /
+  1) should have element .not-on-page with text content "some text"
 
-  Failed Tests:   There were 2 failures
+  1 passing (3s)
+  1 failing
 
-    x failing test
-    x should be equivalent
+  1) should have element .not-on-page with text content "some text":
+     Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/arve/git/simple-browser-testing/test.js)
+
+
+
 
 npm ERR! Test failed.  See above for more details.
 ```
