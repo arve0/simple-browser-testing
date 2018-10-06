@@ -46,8 +46,27 @@ Server: 200 - GET: /
 npm ERR! Test failed.  See above for more details.
 ```
 
-## react
-See the [react branch](https://github.com/arve0/simple-browser-testing/tree/react) if you want to test React.
+## how does the tests look like?
+```js
+it('should have element .present-on-page with text content "some text"', async () => {
+    let input = await page.$('input')
+    await input.type('qwerty')
+    await sleep(300)
+    await input.press('Enter')
 
-It tries to have a minimal setup with support for JSX through typescript (no webpack, etc).
+    await page.waitFor('.present-on-page')
 
+    let elementText = await page.$eval('.present-on-page', el => el.textContent)
+
+    equals(elementText, 'some text')
+})
+```
+
+## configuration
+Root path of webserver can be set in top of [server.js](server.js) in the variable `rootPath`.
+
+Server port and url to fetch is configured in [test.js](test.js).
+
+## other variations
+Go to [branches](https://github.com/arve0/simple-browser-testing/branches) to see examples
+of react and client-side tape setup.
