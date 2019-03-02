@@ -20,5 +20,5 @@
     "puppeteer": "*",
     "mocha": "*"
   },
-  "dependencies": { }
+  "dependencies": {}
 }

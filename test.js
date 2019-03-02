@@ -7,9 +7,10 @@ let mainPage = `http://localhost:${port}/`
 let browser = null
 let page = null
 
-before(() => launch({ devtools: true }).then(async (b) => {
-    browser = b
+before(async function () {
+    this.timeout(5 * 1000) // starting browser may take more than 2 seconds
     await start(port)
+    browser = await launch({ devtools: true })
     page = (await browser.pages())[0]
 
     page.on('console', async msg => {
@@ -21,7 +22,7 @@ before(() => launch({ devtools: true }).then(async (b) => {
             console.log(msg._text)
         }
     })
-}))
+})
 
 beforeEach(async () => await page.goto(mainPage))
 
