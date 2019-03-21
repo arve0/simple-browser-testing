@@ -19,7 +19,7 @@ const webserver = http.createServer(sendFile);
 function sendFile(request, response) {
     let path = request.url || '';
     let safePath = normalize(path).replace('^(\.\.[\/\\])+', '');
-    if (safePath === '' || safePath === '/') {
+    if (safePath === '' || safePath === '/' || safePath === '\\') {
         safePath = 'index.html';
     }
     let filename = join(rootPath, safePath);
