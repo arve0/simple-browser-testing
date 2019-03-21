@@ -1,4 +1,4 @@
-const { start, shutdown } = require('./server')
+const server = require('./server')
 const { launch } = require('puppeteer')
 const { equals, notEqual } = require('assert');
 
@@ -9,12 +9,12 @@ let page = null
 
 before(async function () {
     this.timeout(5 * 1000) // starting browser may take more than 2 seconds
-    await start(port)
+    await server.start(port)
     browser = await launch({ devtools: true })
     page = (await browser.pages())[0]
 
     page.on('console', async msg => {
-        if (msg.type() === 'error') {
+        if (msg.type() === 'error' && msg.args().length) {
             console.error("Browser console.error:")
             let error = await msg.args()[0].jsonValue()
             console.error(error)
@@ -28,7 +28,7 @@ beforeEach(async () => await page.goto(mainPage))
 
 after(() => {
     browser.close()
-    shutdown()
+    server.shutdown()
 })
 
 it('should have an input element', async () => {
