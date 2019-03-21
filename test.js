@@ -13,7 +13,7 @@ before(async function () {
     browser = await launch({ devtools: true })
     page = (await browser.pages())[0]
 
-    page.on('console', async msg => {
+    page.on('console', async function (msg) {
         if (msg.type() === 'error' && msg.args().length) {
             console.error("Browser console.error:")
             let error = await msg.args()[0].jsonValue()
@@ -24,19 +24,21 @@ before(async function () {
     })
 })
 
-beforeEach(async () => await page.goto(mainPage))
+beforeEach(async function () {
+    await page.goto(mainPage)
+})
 
-after(() => {
+after(function () {
     browser.close()
     server.shutdown()
 })
 
-it('should have an input element', async () => {
+it('should have an input element', async function () {
     let input = await page.$('input')
     notEqual(input, null)
 })
 
-it('should have element .not-on-page with text content "some text"', async () => {
+it('should have element .not-on-page with text content "some text"', async function () {
     let input = await page.$('input')
     await input.type('qwerty')
     await sleep(300)
