@@ -12,8 +12,7 @@ It basically
 
 ## usage
 ```sh
-git clone https://github.com/arve0/simple-browser-testing browser-tests
-rm -fr browser-tests/.git
+npx degit arve0/simple-browser-testing browser-tests
 cd browser-tests
 npm install
 npm test
