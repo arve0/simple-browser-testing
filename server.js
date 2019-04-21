@@ -2,8 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const { normalize, join } = require("path");
 
-const rootPath = __dirname;
-
+let rootPath;
 const mimeTypes = {
     'html': 'text/html',
     'jpeg': 'image/jpeg',
@@ -39,7 +38,8 @@ function sendFile(request, response) {
     }
 }
 
-function start(port = 8888) {
+function start(path = __dirname, port = 8888) {
+    rootPath = path
     return new Promise((resolve, reject) => {
         webserver.listen(port, (err) => {
             if (err) {

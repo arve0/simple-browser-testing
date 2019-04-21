@@ -1,7 +1,8 @@
 const server = require('./server')
-const { launch } = require('puppeteer')
+const puppeteer = require('puppeteer')
 const { equals, notEqual } = require('assert');
 
+let rootPath = __dirname
 let port = 8888
 let mainPage = `http://localhost:${port}/`
 let browser = null
@@ -9,8 +10,8 @@ let page = null
 
 before(async function () {
     this.timeout(5 * 1000) // starting browser may take more than 2 seconds
-    await server.start(port)
-    browser = await launch({ devtools: true })
+    await server.start(rootPath, port)
+    browser = await puppeteer.launch({ devtools: true })
     page = (await browser.pages())[0]
 
     page.on('console', async function (msg) {
