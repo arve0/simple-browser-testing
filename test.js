@@ -44,7 +44,7 @@ after(function () {
 })
 
 describe('tests', function () {
-    this.timeout(slowMo ? 0 : 2000)
+    this.timeout(slowMo === 0 ? 2000 : 0)
 
     it('typing in regular input element', async function () {
         await waitFor({ text: 'regular', click: true })
