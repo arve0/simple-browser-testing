@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/arve0/simple-browser-testing#readme",
   "devDependencies": {
-    "puppeteer": "*",
+    "puppeteer-firefox": "*",
     "mocha": "*"
   },
   "dependencies": {}

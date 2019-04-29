@@ -3,11 +3,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Browser testing with tape</title>
+    <title>Browser testing with puppeteer</title>
     <!-- avoid 404 for favicon.ico -->
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-    <input name="user">
+    <div id="content"></div>
+    <p id="output"></p>
+
+    <script>
+        function updateParagraphTextContent(event) {
+            document.querySelector('#output').innerHTML = event.target.value;
+        }
+
+        const updateFunction = {
+            regular: 'updateParagraphTextContent(event)',
+            shadowed: 'updateParagraphTextContent(event)',
+            iframe: 'parent.updateParagraphTextContent(event)',
+        }
+        const content = (type) => `
+            <label>
+                ${type}
+                <input onkeyup=${updateFunction[type]}>
+            </label>
+        `;
+
+        class ShadowedInput extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: "open" });
+            }
+            connectedCallback() {
+                this.shadowRoot.innerHTML = content('shadowed');
+            }
+        }
+        window.customElements.define("shadowed-input", ShadowedInput);
+
+        document.querySelector('#content').innerHTML = content('regular');
+        document.querySelector('#content').innerHTML += `<shadowed-input></shadowed-input>`;
+        document.querySelector('#content').innerHTML += `<iframe srcdoc="${content('iframe')}"></iframe>`;
+
+        document.querySelector('iframe').updateParagraphTextContent = updateParagraphTextContent;
+    </script>
+
 </body>
 </html>

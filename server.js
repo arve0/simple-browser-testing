@@ -28,7 +28,7 @@ function sendFile(request, response) {
         response.end('File not found.');
     }
     else {
-        console.log('Server: 200 - ' + request.method + ': ' + request.url);
+        // console.log('Server: 200 - ' + request.method + ': ' + request.url);
         let headers = {
             // @ts-ignore
             'Content-Type': mimeTypes[filename.split('.').pop()] || mimeTypes['default']

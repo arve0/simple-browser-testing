@@ -7,10 +7,13 @@ This is a dead simple setup of end-to-end testing with chrome headless using
 It basically
 
 1. Starts a webserver
-2. Loads chromium through puppeteer
-4. Runs tests with mocha
+2. Loads firefox or chromium through puppeteer
+3. Runs tests with mocha
 
 ## usage
+[Copy contents](https://github.com/Rich-Harris/degit) of this repository to `browser-tests`,
+install depdendecies and run tests:
+
 ```sh
 npx degit arve0/simple-browser-testing browser-tests
 cd browser-tests
@@ -18,7 +21,7 @@ npm install
 npm test
 ```
 
-You should get one test passing and one test failing:
+You should get three tests passing and one test failing:
 ```sh
 $ npm test
 
@@ -28,44 +31,64 @@ $ npm test
 
 
 Server: Listening on port 8888
-Server: 200 - GET: /
-  ✓ should have an input element (58ms)
-Server: 200 - GET: /
-  1) should have element .not-on-page with text content "some text"
+  tests
+    ✓ typing in regular input element
+    ✓ typing in shadowed input element
+    ✓ typing in iframed input element
+    1) should fail
 
-  1 passing (3s)
+
+  3 passing (1s)
   1 failing
 
-  1) should have element .not-on-page with text content "some text":
-     Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/arve/git/simple-browser-testing/test.js)
-
-
-
-
-npm ERR! Test failed.  See above for more details.
+  1) tests
+       should fail:
+     Error: 'non existent text' not found on page in selector '*', waited 100 milliseconds.
+      at waitFor (test.js:89:11)
+      at process._tickCallback (internal/process/next_tick.js:68:7)
 ```
 
 ## how does the tests look like?
 ```js
-it('should have element .present-on-page with text content "some text"', async () => {
-    let input = await page.$('input')
-    await input.type('qwerty')
-    await sleep(300)
-    await input.press('Enter')
-
-    await page.waitFor('.present-on-page')
-
-    let elementText = await page.$eval('.present-on-page', el => el.textContent)
-
-    equals(elementText, 'some text')
+it('should be able to click text, type characters and wait for text', async function () {
+    await waitFor({ text: 'regular', click: true })
+    await page.keyboard.type('asdf')
+    await waitFor({ text: 'asdf' })
 })
 ```
 
 ## configuration
-Root path of webserver can be set in top of [server.js](server.js) in the variable `rootPath`.
+Read top of [test.js](test.js):
 
-Server port and url to fetch is configured in [test.js](test.js).
+```js
+// configuration
+const rootPath = __dirname  // which folder to serve over http
+const port = 8888  // which port to use for http server
+const mainPage = `http://localhost:${port}/`
+const headless = false  // false: show browser, true: hide browser
+const slowMo = false  // true: each browser action will take 100 milliseconds
+    ? 100
+    : 0
+```
 
-## other variations
-Go to [branches](https://github.com/arve0/simple-browser-testing/branches) to see examples
-of react and client-side tape setup.
+### using chromium instead of firefox
+1. Alter `package.json` to use `puppeteer`:
+
+  ```json
+    "devDependencies": {
+      "puppeteer": "*",
+      "mocha": "*"
+    },
+  ```
+
+2. Refresh dependencies:
+
+  ```sh
+  npm install && npm prune
+  ```
+
+3. Run tests:
+
+  ```sh
+  npm test
+  ```
