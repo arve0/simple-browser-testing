@@ -1,5 +1,5 @@
 # simple browser testing
-This is a dead simple setup of end-to-end testing with chrome headless using
+This is a dead simple setup of end-to-end testing with firefox/chrome headless using
 
 - [puppeteer](https://www.npmjs.com/package/puppeteer/) and
 - [mocha](https://www.npmjs.com/package/mocha).
