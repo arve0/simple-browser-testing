@@ -86,7 +86,13 @@ async function waitFor({ text, selector = '*', click = false, timeout = 1000 }) 
         let frames = await page.frames()
         let scopes = [page, ...frames]
         for (let scope of scopes) {
-            let result = await scope.evaluate(pageFunction, text, selector, click)
+            let result
+            try {
+                result = await scope.evaluate(pageFunction, text, selector, click)
+            } catch (err) {
+                // probably lost execution context, break and get new scopes
+                break
+            }
             if (result) {
                 return true
             }
